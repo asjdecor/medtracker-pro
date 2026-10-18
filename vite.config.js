@@ -3,8 +3,9 @@ import { defineConfig } from 'vite'
 import { VitePWA } from 'vite-plugin-pwa'
 import { fileURLToPath, URL } from 'node:url'
 
-// BASE_PATH is set by the GitHub Pages workflow (/<repo>/); local dev uses "/".
-const base = process.env.BASE_PATH || '/'
+// GitHub Pages serves from /<repo>/. REPO_NAME (no slashes) survives Git Bash path mangling on Windows;
+// BASE_PATH is kept for the Actions workflow. Local dev uses "/".
+const base = process.env.REPO_NAME ? `/${process.env.REPO_NAME}/` : process.env.BASE_PATH || '/'
 
 export default defineConfig({
   base,

@@ -4,7 +4,7 @@
 set -eu
 cd "$(dirname "$0")/.."
 REPO_NAME=$(basename "$(git rev-parse --show-toplevel)")
-BASE_PATH="/$REPO_NAME/" npm run build
+REPO_NAME="$REPO_NAME" npm run build
 cp dist/index.html dist/404.html
 touch dist/.nojekyll
 cd dist
