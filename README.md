@@ -24,8 +24,8 @@ Para ativar contas e sincronização entre aparelhos com **Supabase**:
 2. No **SQL Editor**, rode o conteúdo de [`supabase/schema.sql`](supabase/schema.sql).
 3. Em **Authentication → URL Configuration**, coloque `https://asjdecor.github.io/medtracker-pro/` em *Site URL* e em *Redirect URLs*.
 4. (Opcional) Em **Authentication → Providers → Google**, ative o login com Google.
-5. No GitHub: **Settings → Secrets and variables → Actions → Variables**, crie `VITE_SUPABASE_URL` e `VITE_SUPABASE_ANON_KEY` (em Supabase → Project Settings → API).
-6. Rode o workflow novamente (aba **Actions → Deploy to GitHub Pages → Run workflow**).
+5. Crie `.env.local` na raiz com `VITE_SUPABASE_URL=...` e `VITE_SUPABASE_ANON_KEY=...` (em Supabase → Project Settings → API).
+6. Publique de novo: `npm run deploy`.
 
 A chave `anon` é pública por design; a proteção vem das políticas RLS do `schema.sql` (cada usuário só lê e grava as próprias linhas). As chaves de IA nunca são sincronizadas: ficam só no aparelho.
 
@@ -38,5 +38,11 @@ npm run build      # gera dist/
 ```
 
 Crie um `.env.local` com `VITE_SUPABASE_URL` e `VITE_SUPABASE_ANON_KEY` para testar o modo nuvem localmente.
+
+### Publicação
+
+`npm run deploy` compila e envia `dist/` para o branch `gh-pages` (GitHub Pages → *Deploy from a branch*).
+
+Para deploy automático a cada push: autorize o escopo de workflows (`gh auth refresh -s workflow`), mova `deploy/github-actions-deploy.yml` para `.github/workflows/deploy.yml`, troque o Pages para *GitHub Actions* em **Settings → Pages** e cadastre as duas variáveis do Supabase em **Settings → Secrets and variables → Actions → Variables**.
 
 > O MedTracker Pro organiza informações; não substitui orientação de médico ou farmacêutico.
