@@ -3,13 +3,14 @@ import { NavLink, useLocation } from 'react-router-dom'
 import { toast } from 'sonner'
 import {
   Pill, LayoutDashboard, Sparkles, CalendarDays, Activity, Stethoscope, FileText, UserCircle2,
-  LogOut, Menu, X, HeartPulse, Cloud, HardDrive, Moon, Sun,
+  LogOut, Menu, X, HeartPulse, Cloud, HardDrive, Moon, Sun, Mic,
 } from 'lucide-react'
 import { useAuth } from '@/lib/auth'
 import { useCollection, useLocalSetting } from '@/lib/hooks'
 import { dueSlots, notify } from '@/lib/reminders'
-import SOSButton from './SOSButton'
+import SOSButton, { openSOS } from './SOSButton'
 import InstallBanner from './InstallBanner'
+import VoiceAssistant, { openVoice } from './VoiceAssistant'
 
 export const NAV = [
   { to: '/hoje', label: 'Hoje', icon: LayoutDashboard },
@@ -22,7 +23,8 @@ export const NAV = [
   { to: '/emergencia', label: 'Cartão de emergência', icon: HeartPulse },
   { to: '/perfil', label: 'Perfil e ajustes', icon: UserCircle2 },
 ]
-const BOTTOM = NAV.slice(0, 4)
+const BOTTOM = [NAV[0], NAV[1], NAV[3]]
+const MORE = NAV.filter((l) => !BOTTOM.includes(l))
 
 function Avatar({ user, className = 'w-10 h-10' }) {
   return user?.picture
@@ -125,7 +127,8 @@ export default function Shell({ children }) {
               <div className="font-display font-medium text-brand text-sm truncate">{current?.label || 'MedTracker'}</div>
             </div>
           </div>
-          <div className="flex items-center gap-1">
+          <div className="flex items-center gap-1.5">
+            <button onClick={openSOS} className="h-10 px-4 rounded-full bg-danger text-white text-sm font-bold tracking-wide shadow-sm shadow-danger/30" aria-label="SOS — emergência">SOS</button>
             <button onClick={toggle} className="p-2 rounded-full text-faint hover:bg-muted" aria-label="Alternar tema">
               {dark ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
             </button>
@@ -133,13 +136,20 @@ export default function Shell({ children }) {
           </div>
         </header>
 
-        <main id="main" className="print-area flex-1 p-4 sm:p-6 lg:p-10 max-w-[1400px] w-full mx-auto pb-32 lg:pb-12">
+        <main id="main" className="print-area flex-1 p-4 sm:p-6 lg:p-10 max-w-[1400px] w-full mx-auto pb-32 lg:pb-28">
           {children}
         </main>
 
         <nav className="no-print lg:hidden fixed bottom-0 inset-x-0 z-30 bg-surface/95 backdrop-blur border-t border-line" style={{ paddingBottom: 'env(safe-area-inset-bottom)' }} aria-label="Navegação inferior">
           <ul className="grid grid-cols-5 h-16">
-            {BOTTOM.map(({ to, label, short, icon: Icon }) => (
+            {BOTTOM.map(({ to, label, short, icon: Icon }, i) => [i === 2 && (
+              <li key="falar" className="relative">
+                <button onClick={openVoice} className="absolute left-1/2 -translate-x-1/2 -top-7 w-[4.5rem] h-[4.5rem] rounded-full bg-brand text-on-brand shadow-lg shadow-brand/40 border-4 border-surface flex flex-col items-center justify-center active:scale-95 transition" aria-label="Falar com o app por voz">
+                  <Mic className="w-7 h-7" strokeWidth={2.4} />
+                </button>
+                <span className="absolute bottom-2 inset-x-0 text-center text-[11px] font-semibold text-brand">Falar</span>
+              </li>
+            ), (
               <li key={to}>
                 <NavLink to={to} className={({ isActive }) => `h-full flex flex-col items-center justify-center gap-0.5 text-[10px] font-medium ${isActive ? 'text-brand' : 'text-faint'}`}>
                   {({ isActive }) => (<>
@@ -148,7 +158,7 @@ export default function Shell({ children }) {
                   </>)}
                 </NavLink>
               </li>
-            ))}
+            )])}
             <li>
               <button onClick={() => setMore(true)} className="w-full h-full flex flex-col items-center justify-center gap-0.5 text-[10px] font-medium text-faint" aria-label="Mais opções">
                 <span className="w-11 h-8 rounded-full flex items-center justify-center"><Menu className="w-[18px] h-[18px]" /></span>
@@ -168,7 +178,7 @@ export default function Shell({ children }) {
               <button onClick={() => setMore(false)} className="p-2 rounded-full hover:bg-muted" aria-label="Fechar"><X className="w-5 h-5" /></button>
             </div>
             <nav className="grid grid-cols-1 gap-1">
-              {NAV.slice(4).map(({ to, label, icon: Icon }) => (
+              {MORE.map(({ to, label, icon: Icon }) => (
                 <NavLink key={to} to={to} className={linkCls}><Icon className="w-4 h-4" />{label}</NavLink>
               ))}
               <button onClick={signOut} className="flex items-center gap-3 px-4 py-2.5 rounded-full text-sm font-medium text-accent hover:bg-muted"><LogOut className="w-4 h-4" />Sair</button>
@@ -178,6 +188,7 @@ export default function Shell({ children }) {
       )}
 
       <InstallBanner />
+      <VoiceAssistant />
       <SOSButton />
     </div>
   )

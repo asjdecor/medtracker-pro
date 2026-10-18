@@ -125,11 +125,11 @@ export function VoiceButton({ value, onChange, className = '' }) {
     <button
       type="button"
       onClick={(e) => { e.preventDefault(); listening ? stop() : start() }}
-      className={`w-8 h-8 rounded-full flex items-center justify-center border transition-colors ${listening ? 'bg-accent text-white border-accent pulse-dot' : 'border-line text-brand hover:bg-muted'} ${className}`}
+      className={`h-9 px-3.5 rounded-full inline-flex items-center gap-1.5 text-sm font-medium normal-case tracking-normal border transition-colors ${listening ? 'bg-accent text-white border-accent pulse-dot' : 'border-brand/30 bg-muted text-brand hover:bg-line'} ${className}`}
       aria-label={listening ? 'Parar ditado' : 'Ditar por voz'}
-      title={listening ? 'Parar ditado' : 'Ditar por voz'}
     >
       {listening ? <MicOff className="w-4 h-4" /> : <Mic className="w-4 h-4" />}
+      {listening ? 'Parar' : 'Falar'}
     </button>
   )
 }

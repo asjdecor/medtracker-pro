@@ -21,7 +21,7 @@ export default function InstallBanner() {
   const close = () => { localStorage.setItem(DISMISS, '1'); setShow(false) }
 
   return (
-    <div className="no-print fixed z-30 left-4 right-20 bottom-24 lg:left-auto lg:right-28 lg:bottom-8 lg:w-96 card p-4 shadow-lg fade-up">
+    <div className="no-print fixed z-30 left-4 right-4 bottom-28 lg:left-auto lg:right-8 lg:bottom-28 lg:w-96 card p-4 shadow-lg fade-up">
       <div className="flex items-start gap-3">
         <div className="w-10 h-10 rounded-2xl bg-brand text-on-brand flex items-center justify-center shrink-0"><Download className="w-5 h-5" /></div>
         <div className="flex-1 min-w-0">

@@ -3,6 +3,7 @@ import { toast } from 'sonner'
 import { Bell, ShieldCheck, Sparkles, Mail, HardDrive, Cloud, CalendarCheck, Loader2, PackageCheck } from 'lucide-react'
 import { useAuth } from '@/lib/auth'
 import { Logo } from '@/components/Shell'
+import { VoiceButton } from '@/components/ui'
 
 function GoogleIcon() {
   return (
@@ -76,7 +77,10 @@ export default function Login() {
               )}
               <div className="flex items-center gap-2 text-sm font-medium"><HardDrive className="w-4 h-4 text-brand" /> Usar sem conta, só neste aparelho</div>
               <form onSubmit={(e) => { e.preventDefault(); startLocal(name) }} className="flex flex-col sm:flex-row gap-2">
-                <input className="field" placeholder="Como podemos te chamar?" value={name} onChange={(e) => setName(e.target.value)} aria-label="Seu nome" />
+                <div className="relative flex-1">
+                  <input className="field pr-28" placeholder="Como podemos te chamar?" value={name} onChange={(e) => setName(e.target.value)} aria-label="Seu nome" />
+                  <VoiceButton value="" onChange={(v) => setName(v.replace(/^(meu nome (e|é)|me chamo|eu sou|sou o|sou a)\s+/i, ''))} className="absolute right-1 top-1" />
+                </div>
                 <button className={cloudEnabled ? 'btn-outline shrink-0' : 'btn-primary shrink-0'}>Começar</button>
               </form>
               <p className="flex items-start gap-2 text-xs text-faint">

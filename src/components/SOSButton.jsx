@@ -11,16 +11,23 @@ const SERVICES = [
   { n: '0800 722 6001', label: 'Disque-Intoxicação (Anvisa)', text: 'Intoxicação por medicamentos' },
 ]
 
+export const openSOS = () => window.dispatchEvent(new Event('mt:sos'))
+
 export default function SOSButton() {
   const [open, setOpen] = useState(false)
   const [contacts, setContacts] = useState([])
+  useEffect(() => {
+    const onOpen = () => setOpen(true)
+    window.addEventListener('mt:sos', onOpen)
+    return () => window.removeEventListener('mt:sos', onOpen)
+  }, [])
   useEffect(() => { if (open) getProfile().then((p) => setContacts(p?.emergency_contacts || [])).catch(() => {}) }, [open])
 
   return (
     <>
       <button
         onClick={() => setOpen(true)}
-        className="no-print fixed z-30 right-4 bottom-24 lg:bottom-8 lg:right-8 w-14 h-14 rounded-full bg-danger text-white shadow-lg shadow-danger/30 flex items-center justify-center font-semibold text-sm hover:scale-105 transition-transform"
+        className="no-print hidden lg:flex fixed z-30 bottom-8 right-8 w-14 h-14 rounded-full bg-danger text-white shadow-lg shadow-danger/30 items-center justify-center font-semibold text-sm hover:scale-105 transition-transform"
         aria-label="SOS — emergência"
       >
         SOS
